@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import Header from "./components/Header";
 import Body from "./components/Body";
@@ -9,7 +9,12 @@ import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 // Normal Import of Grocery Component
 // import Grocery from "./components/Grocery";
 import App from "./App";
+import { useContext } from "react";
 import RestaurantMenu from "./components/RestaurantMenu";
+import UserContext from "./utils/UserContext";
+import { Provider } from "react-redux";
+import appStore from "./utils/appStore";
+import Cart from "./components/Cart";
 
 // Chunking
 // Code Splitting
@@ -22,12 +27,26 @@ const Grocery = lazy(() => import("./components/Grocery"));
 
 // App - component composition happened here
 const AppLayout = () => {
+	const [UserName, setUserName] = useState();
+	useEffect(() => {
+		const data = {
+			name: "Md.Shabrez",
+		};
+		setUserName(data.name);
+	}, []);
+
 	return (
-		<div className="app">
-			<Header />
-			<Outlet />
-			{/* <Body /> */}
-		</div>
+		<Provider store={appStore}>
+			<div className="app">
+				{/* <UserContext.Provider value={{ loggedInUser: "Md.Sameer" }}> */}
+				<UserContext.Provider value={{ loggedInUser: UserName, setUserName }}>
+					<Header />
+					<Outlet />
+				</UserContext.Provider>
+				{/* </UserContext.Provider> */}
+				{/* <Body /> */}
+			</div>
+		</Provider>
 	);
 };
 
@@ -63,6 +82,10 @@ const appRouter = createBrowserRouter([
 			{
 				path: "/restaurants/:resId",
 				element: <RestaurantMenu />,
+			},
+			{
+				path: "/cart",
+				element: <Cart />,
 			},
 		],
 		errorElement: <Error />,

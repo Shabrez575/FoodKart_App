@@ -2,15 +2,21 @@ import { useEffect, useState } from "react";
 import { LOGO_URL } from "../utils/constant";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utils/useOnlineStatus";
+import { useContext } from "react";
+import UserContext from "../utils/UserContext";
+import { useSelector } from "react-redux";
 
 // Header component
 const Header = () => {
   const [btnNameReact, setbtnNameReact] = useState("Login");
 
   console.log("Header2");
+  const OnlineStatus = useOnlineStatus();
 
+  const data = useContext(UserContext);
+  console.log(data);
   // If no dependency array is passed, useEffect will run on every render
-  /*
+  /*ikm 
   useEffect(() => {
     console.log("useEffect Called Header");
   });
@@ -27,6 +33,11 @@ const Header = () => {
     console.log("useEffect Called Header");
   }, [btnNameReact]);
 
+  // useSelector hooks - We are subscribing to the store using a selector.
+
+  // It will hold number of value inside cart items.
+  const Items = useSelector((store) => store.cart.cartItems);
+  console.log(Items);
   return (
     <div className="navbar sticky-top navbar-light bg-light d-flex shadow-lg p-1 justify-content-between">
       <div className="logo-container">
@@ -35,7 +46,7 @@ const Header = () => {
       <div className="nav-items">
         <ul className="d-flex p-5">
           <li className="px-2 list-unstyled">
-            Online Status:{useOnlineStatus ? "🟢" : "🔴"}
+            Online Status:{OnlineStatus ? "🟢" : "🔴"}
           </li>
           <li className="px-2 list-unstyled  link-underline-opacity-0">
             <Link className="text-decoration-none" to="/">
@@ -57,7 +68,11 @@ const Header = () => {
               Contact
             </Link>
           </li>
-          <li className="px-2 list-unstyled ">Cart</li>
+          <li className="px-2 list-unstyled">
+            <Link className="text-decoration-none" to="/cart">
+              cart({Items.length})
+            </Link>
+          </li>
           <li className="px-2 list-unstyled">
             <Link className="text-decoration-none" to="/grocery">
               Grocery
@@ -81,6 +96,12 @@ const Header = () => {
             >
               {btnNameReact}
             </button>
+          </li>
+          <li
+            className="px-1
+              list-unstyled"
+          >
+            {data.loggedInUser}
           </li>
         </ul>
       </div>

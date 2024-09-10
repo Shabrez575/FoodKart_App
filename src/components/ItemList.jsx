@@ -1,6 +1,17 @@
 import { CDN_URL } from "../utils/constant";
-const ItemList = ({ items }) => {
-  console.log(items);
+import { useDispatch} from "react-redux";
+import { addItems} from "../utils/cartSlice";
+
+const ItemList = ({ items, dummy }) => {
+  //console.log(items);
+
+  const dispatch = useDispatch();
+
+  const handleAddItem = (item) => {
+    dispatch(addItems(item));
+  };
+
+ console.log(dummy);
   return (
     <div>
       {items.map((item) => (
@@ -8,7 +19,7 @@ const ItemList = ({ items }) => {
           key={item.card.info.id}
           className="p-2 m-2 border-bottom row text-start"
         >
-          <div className="col-sm-8">
+          <div className="col-sm-6">
             <div className="py-2">
               {" "}
               <span>{item.card.info.name}</span>
@@ -27,7 +38,9 @@ const ItemList = ({ items }) => {
               src={CDN_URL + item.card.info.imageId}
               className="food-img h-75 w-75" alt="food"
             />
-            <button className="btn btn-outline-success m-1 shadow-lg rounded-pill fw-bold"> Add+ </button>
+            {/* <button className="btn btn-outline-success m-1 shadow-lg rounded-pill fw-bold" onClick={handleAddItem}> Add+ </button> */}
+
+             <button className="btn btn-outline-success m-1 shadow-lg rounded-pill fw-bold" onClick= {() => handleAddItem(item)}> Add+ </button>
           </div>
           {/* </div> */}
         </div>
